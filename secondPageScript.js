@@ -1,7 +1,8 @@
 import { cardHtml } from "./script.js";
 import { appendAlert } from "./script.js";
+import { scrollPage } from "./script.js";
+import { START_STRING, END_STRING } from "./script.js";
 
-const API_KEY = `AIzaSyBHUKm2KTSU4psulz-gU7Ji7M3bb6klt30`;
 let copyInputVal = '';
 let nextPage = '';
 let query = localStorage.getItem('query');
@@ -11,11 +12,10 @@ function searchByQuery(inputVal) {
     let url;
 
     if (inputVal) {
-        url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=${inputVal}&type=video&key=${API_KEY}`;
+        url = `${START_STRING}&q=${inputVal}${END_STRING}`;
         copyInputVal = inputVal;
     } else {
-        url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&pageToken=${nextPage}&q=${copyInputVal}&type=video&key=${API_KEY}`;
-        console.log(`next page fun called`);
+        url = `${START_STRING}&pageToken=${nextPage}&q=${copyInputVal}${END_STRING}`;
     }
 
     $('#input-text-2ndpage').val('');
@@ -29,7 +29,7 @@ function searchByQuery(inputVal) {
         $('#loading-msg').hide();
         $('#query-cards').append(card);
     }).fail(function (err) {
-        console.log(`some error occured`);
+        console.log(`some error occurred`);
         console.log(err);
     });
 }
@@ -49,15 +49,7 @@ $('#submit-btn-2ndpage').click(function () {
     }
 });
 
-window.addEventListener('scroll', function () {
-    const scrollable = this.document.documentElement.scrollHeight - this.window.innerHeight;
-    const scrolled = this.window.scrollY;
-
-    if (Math.floor(scrollable) === Math.floor(scrolled)) {
-        searchByQuery()
-    }
-
-});
+scrollPage(searchByQuery);
 
 $('#query-cards').on('click', '.card-data', function () {
     $('.modal-img').attr('src', $(this).data('src'));

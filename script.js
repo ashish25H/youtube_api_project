@@ -1,18 +1,20 @@
-const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
-const API_KEY = `AIzaSyBHUKm2KTSU4psulz-gU7Ji7M3bb6klt30`;
+const alertPlaceholder = document.querySelector('.show-alert');
+const API_KEY = `AIzaSyD16YbHRdrvgBkdyuWkPbqez5KLDVYZQoI`;
+export const START_STRING = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20`;
+export const END_STRING = `&type=video&key=${API_KEY}`;
 
 let nextPage = '';
 
-export function appendAlert(message, type) {
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-    ].join('');
 
-    alertPlaceholder.append(wrapper);
+export function appendAlert(message, type) {
+    const div = `<div>
+    <div class="alert alert-${type} alert-dismissible" role="alert">
+      <div>${message}</div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        </div> `;
+
+    alertPlaceholder.innerHTML = div;
 }
 
 export function cardHtml(thumbnail, videoId, title) {
@@ -28,8 +30,7 @@ export function cardHtml(thumbnail, videoId, title) {
 function loadItems() {
     $('#loading-msg').show();
 
-    let url = nextPage ? `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&pageToken=${nextPage}&type=video&key=${API_KEY}`
-        : `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&type=video&key=${API_KEY}`;
+    let url = nextPage ? `${START_STRING}&pageToken=${nextPage}${END_STRING}` : `${START_STRING}${END_STRING}`;
 
     $.get(url, function (data) {
         nextPage = data.nextPageToken;
@@ -40,14 +41,10 @@ function loadItems() {
         $('#loading-msg').hide();
         $('#cards').append(card);
     }).fail(function (err) {
-        console.log(`some error occured`);
+        console.log(`some error occurred`);
         console.log(err);
     });
 }
-
-$('form').submit(function (event) {
-    event.preventDefault();
-});
 
 $('#submit-btn').click(function () {
     if ($('#input-text').val()) {
@@ -59,15 +56,18 @@ $('#submit-btn').click(function () {
     }
 });
 
-window.addEventListener('scroll', function () {
-    const scrollable = this.document.documentElement.scrollHeight - this.window.innerHeight;
-    const scrolled = this.window.scrollY;
-
-    if (Math.floor(scrollable) === Math.floor(scrolled)) {
-        loadItems();
-    }
-
-});
+export function scrollPage(loadItems){
+    window.addEventListener('scroll', function () {
+        const scrollable = this.document.documentElement.scrollHeight - this.window.innerHeight;
+        const scrolled = this.window.scrollY;
+    
+        if (Math.floor(scrollable) === Math.floor(scrolled)) {
+            loadItems();
+        }
+    
+    });
+};
+scrollPage(loadItems);
 
 $('#cards').on('click', '.card-data', function () {
     $('.modal-img').attr('src', $(this).data('src'));
