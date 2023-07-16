@@ -18,7 +18,7 @@ export function appendAlert(message, type) {
 }
 
 export function cardHtml(thumbnail, videoId, title) {
-    return `<div class="card g-col-4" style="width: 18rem;">
+    return `<div class="card g-col-4 card-style">
     <img src="${thumbnail}" class="card-img-top" alt="thumbnail">
     <div class="card-body" >
         <h5 class="card-title card-data" data-bs-toggle="modal" data-bs-target="#exampleModal" data-src=${thumbnail} data-video=${videoId}>

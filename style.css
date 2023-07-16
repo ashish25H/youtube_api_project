@@ -22,16 +22,6 @@ nav{
 #input-text{
     width: 100%;
 }
-/* 
-form input{
-    margin-bottom: 20px;
-    padding: 10px;
-    outline: none;
-}
-
-form button{
-    margin-bottom: 20px;
-} */
 
 .card-img-top{
     margin-top: 15px;
@@ -44,6 +34,10 @@ form button{
 
 .alert-msg{
     padding: 0 100px;
+}
+
+.card-style{
+    width: 18rem;
 }
 
 @media screen and (min-width:600px) and (max-width:1000px){
